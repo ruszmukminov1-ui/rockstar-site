@@ -1,16 +1,13 @@
-// src/main.tsx
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
-
-import { ModalContextProvider } from "./context/ModalContext";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ModalContextProvider>
+    <BrowserRouter>
       <App />
-    </ModalContextProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
