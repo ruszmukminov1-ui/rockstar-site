@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTelegramPlane, FaUser } from "react-icons/fa";
+import { FaTelegramPlane } from "react-icons/fa";
 
 interface HeaderProps {
   currentUser: any;
@@ -52,6 +52,7 @@ const Header: React.FC<HeaderProps> = ({
         )}
       </nav>
     </header>
-);
+  );
+};
 
 export default Header;

@@ -28,6 +28,7 @@ function App() {
     openAuthModal,
     closeAuthModal,
     isSupportOpen,
+    openSupportModal,
     closeSupportModal,
     isOrderOpen,
     closeOrderModal,
@@ -79,10 +80,7 @@ function App() {
         <Header
           currentUser={currentUser}
           onAuthClick={openAuthModal}
-          onSupportClick={openSupportModal => {}}
-          onSupportClick={openSupportModal => {}}
-          onSupportClick={openSupported => {}}
-          onSupportClick={() => openSupportModal()}
+          onSupportClick={openSupportModal}
           onDashboardClick={handleDashboardClick}
           onLogout={handleLogout}
         />
@@ -104,17 +102,13 @@ function App() {
             )
           } />
 
-          <Route path="/terms" element={
-            <>
-              <Terms />
-            </>
-          } />
+          <Route path="/terms" element={<Terms />} />
         </Routes>
 
         <Footer />
         <FloatingElements />
 
-        {/* Модалки */}
+        {/* Модальные окна */}
         {isAuthOpen && <AuthModal isOpen onClose={closeAuthModal} onLogin={handleLogin} />}
         {isSupportOpen && <SupportModal isOpen onClose={closeSupportModal} />}
         {isOrderOpen && selectedProductForOrder && (
