@@ -1,135 +1,77 @@
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
-
+import React, { useState } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
 import Shop from "./components/Shop";
 import Footer from "./components/Footer";
-import AuthModal from "./components/AuthModal";
+import Auth from "./components/Auth";
 import SupportModal from "./components/SupportModal";
 import OrderModal from "./components/OrderModal";
 import FloatingElements from "./components/FloatingElements";
-import Dashboard from "./components/Dashboard";
-import KeyInputModal from "./components/KeyInputModal";
-import Terms from "./components/Terms";
+import TermsModal from "./components/TermsModal";
+import { Product } from "./types/Product";
 
-import { useModal } from "./context/ModalContext";
-import { User } from "./types/User";
-import { storageUtils } from "./utils/storage";
+const App: React.FC = () => {
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-function App() {
-  const {
-    isAuthOpen,
-    openAuthModal,
-    closeAuthModal,
-    isSupportOpen,
-    openSupportModal,
-    closeSupportModal,
-    isOrderOpen,
-    closeOrderModal,
-    selectedProductForOrder,
-    openOrderModal,
-    currentUser,
-    setCurrentUser
-  } = useModal();
+  const openAuthModal = () => setIsAuthOpen(true);
+  const closeAuthModal = () => setIsAuthOpen(false);
 
-  const [showDashboard, setShowDashboard] = useState(false);
-  const [showKeyInput, setShowKeyInput] = useState(false);
+  const openSupportModal = () => setIsSupportOpen(true);
+  const closeSupportModal = () => setIsSupportOpen(false);
 
-  useEffect(() => {
-    const existingUser = storageUtils.getCurrentUser();
-    if (existingUser) {
-      setCurrentUser(existingUser);
-    }
-  }, [setCurrentUser]);
+  const openTermsModal = () => setIsTermsOpen(true);
+  const closeTermsModal = () => setIsTermsOpen(false);
 
-  const handleLogin = (user: User) => {
-    setCurrentUser(user);
-    closeAuthModal();
+  const handleBuyClick = (product: Product) => {
+    setSelectedProduct(product);
   };
 
-  const handleLogout = () => {
-    storageUtils.clearCurrentUser();
-    setCurrentUser(null);
-    setShowDashboard(false);
+  const closeOrderModal = () => {
+    setSelectedProduct(null);
   };
 
   const handleDashboardClick = () => {
-    if (currentUser) {
-      if (currentUser.purchasedProducts.length === 0) {
-        setShowKeyInput(true);
-      } else {
-        setShowDashboard(true);
-      }
-    }
+    alert("Переход в личный кабинет (ещё не реализовано)");
   };
 
-  const scrollToShop = () => {
-    const shopElement = document.getElementById('shop');
-    if (shopElement) shopElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const handleLogout = () => {
+    alert("Вы вышли из аккаунта.");
   };
 
   return (
-    <Router>
-      <div className="relative bg-black text-white font-rajdhani overflow-x-hidden">
-        <Header
-          currentUser={currentUser}
-          onAuthClick={openAuthModal}
-          onSupportClick={openSupportModal}
-          onDashboardClick={handleDashboardClick}
-          onLogout={handleLogout}
+    <div className="relative bg-black text-white min-h-screen overflow-x-hidden">
+      <FloatingElements />
+      <Header
+        currentUser={null}
+        onAuthClick={openAuthModal}
+        onSupportClick={openSupportModal}
+        onDashboardClick={handleDashboardClick}
+        onLogout={handleLogout}
+      />
+      <main className="pt-20">
+        <Hero />
+        <Features />
+        <Shop onBuyClick={handleBuyClick} />
+      </main>
+      <Footer onTermsClick={openTermsModal} />
+
+      {/* Модальные окна */}
+      <Auth isOpen={isAuthOpen} onClose={closeAuthModal} />
+      <SupportModal isOpen={isSupportOpen} onClose={closeSupportModal} />
+      <TermsModal isOpen={isTermsOpen} onClose={closeTermsModal} />
+      {selectedProduct && (
+        <OrderModal
+          isOpen={!!selectedProduct}
+          onClose={closeOrderModal}
+          product={selectedProduct}
         />
-
-        <Routes>
-          <Route path="/" element={
-            showDashboard && currentUser ? (
-              <>
-                <Dashboard user={currentUser} onBack={() => setShowDashboard(false)} />
-                <FloatingElements />
-                {isSupportOpen && <SupportModal isOpen onClose={closeSupportModal} />}
-              </>
-            ) : (
-              <>
-                <Hero onBuyClick={scrollToShop} />
-                <Features />
-                <Shop onBuyClick={openOrderModal} />
-              </>
-            )
-          } />
-
-          <Route path="/terms" element={<Terms />} />
-        </Routes>
-
-        <Footer />
-        <FloatingElements />
-
-        {/* Модальные окна */}
-        {isAuthOpen && <AuthModal isOpen onClose={closeAuthModal} onLogin={handleLogin} />}
-        {isSupportOpen && <SupportModal isOpen onClose={closeSupportModal} />}
-        {isOrderOpen && selectedProductForOrder && (
-          <OrderModal
-            isOpen
-            onClose={closeOrderModal}
-            product={selectedProductForOrder}
-          />
-        )}
-        {showKeyInput && (
-          <KeyInputModal
-            onClose={() => setShowKeyInput(false)}
-            onSuccess={() => {
-              setShowKeyInput(false);
-              setShowDashboard(true);
-            }}
-          />
-        )}
-      </div>
-    </Router>
+      )}
+    </div>
   );
-}
+};
 
 export default App;
