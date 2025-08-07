@@ -1,38 +1,49 @@
-import React from 'react';
-import { Star, MessageCircle, Send, Twitter } from 'lucide-react';
+import { FaTelegramPlane, FaVk, FaDiscord } from "react-icons/fa";
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
-    <footer className="bg-black py-8 px-4 border-t border-purple-900">
-      <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <div className="flex items-center space-x-2">
-              <Star className="text-purple-500" />
-              <span className="tech-font text-xl font-bold">ROCKSTAR CLIENT</span>
-            </div>
-            <p className="text-sm text-gray-400 mt-2"> </p>
-          </div>
-          
-          <div className="flex space-x-6 mb-4 md:mb-0">
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-              <MessageCircle className="text-xl" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-              <Send className="text-xl" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-              <Twitter className="text-xl" />
-            </a>
-          </div>
-          
-          <div className="text-sm text-gray-400">
-            <div className="flex flex-wrap justify-center gap-4">
-              <a href="#" className="hover:text-purple-400 transition-colors">Условия использования</a>
-              <a href="#" className="hover:text-purple-400 transition-colors">Политика конфиденциальности</a>
-            </div>
-          </div>
-        </div>
+    <footer className="relative bg-black text-white py-8 mt-12 border-t border-purple-800">
+      {/* Значки */}
+      <div className="flex justify-center gap-6 mb-4">
+        <a
+          href="https://vk.com/rockstarclient"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-all duration-500 transform hover:-translate-y-2 relative group"
+        >
+          <FaVk size={28} className="text-gray-300 group-hover:text-blue-400" />
+          <div className="absolute inset-0 blur-md rounded-full opacity-0 group-hover:opacity-100 transition duration-500 bg-blue-400/20 z-[-1]" />
+        </a>
+
+        <a
+          href="https://t.me/rockclient"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-all duration-500 transform hover:-translate-y-2 relative group"
+        >
+          <FaTelegramPlane size={28} className="text-gray-300 group-hover:text-blue-400" />
+          <div className="absolute inset-0 blur-md rounded-full opacity-0 group-hover:opacity-100 transition duration-500 bg-blue-400/20 z-[-1]" />
+        </a>
+
+        <a
+          href="https://discord.gg/tckhJdnT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-all duration-500 transform hover:-translate-y-2 relative group"
+        >
+          <FaDiscord size={28} className="text-gray-300 group-hover:text-blue-400" />
+          <div className="absolute inset-0 blur-md rounded-full opacity-0 group-hover:opacity-100 transition duration-500 bg-blue-400/20 z-[-1]" />
+        </a>
+      </div>
+
+      {/* Текст */}
+      <div className="flex justify-center gap-6 text-sm text-gray-400">
+        <a href="#" className="hover:text-white transition duration-300">
+          Условия использования
+        </a>
+        <a href="#" className="hover:text-white transition duration-300">
+          Политика конфиденциальности
+        </a>
       </div>
     </footer>
   );
