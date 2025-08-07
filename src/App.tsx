@@ -1,77 +1,148 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
+
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
 import Shop from "./components/Shop";
 import Footer from "./components/Footer";
-import Auth from "./components/Auth";
+import AuthModal from "./components/AuthModal";
 import SupportModal from "./components/SupportModal";
 import OrderModal from "./components/OrderModal";
 import FloatingElements from "./components/FloatingElements";
-import TermsModal from "./components/TermsModal";
-import { Product } from "./types/Product";
+import Dashboard from "./components/Dashboard";
+import KeyInputModal from "./components/KeyInputModal";
+import Terms from "./components/Terms"; // ✅ Новый импорт
 
-const App: React.FC = () => {
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [isSupportOpen, setIsSupportOpen] = useState(false);
-  const [isTermsOpen, setIsTermsOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+import { useModal } from "./context/ModalContext";
+import { User } from "./types/User";
+import { storageUtils } from "./utils/storage";
 
-  const openAuthModal = () => setIsAuthOpen(true);
-  const closeAuthModal = () => setIsAuthOpen(false);
+function App() {
+  const {
+    isAuthOpen,
+    closeAuthModal,
+    isSupportOpen,
+    closeSupportModal,
+    isOrderOpen,
+    closeOrderModal,
+    selectedProductForOrder,
+    openOrderModal,
+    currentUser,
+    setCurrentUser
+  } = useModal();
 
-  const openSupportModal = () => setIsSupportOpen(true);
-  const closeSupportModal = () => setIsSupportOpen(false);
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [showKeyInput, setShowKeyInput] = useState(false);
 
-  const openTermsModal = () => setIsTermsOpen(true);
-  const closeTermsModal = () => setIsTermsOpen(false);
+  useEffect(() => {
+    const existingUser = storageUtils.getCurrentUser();
+    if (existingUser) {
+      setCurrentUser(existingUser);
+    }
+  }, [setCurrentUser]);
 
-  const handleBuyClick = (product: Product) => {
-    setSelectedProduct(product);
-  };
-
-  const closeOrderModal = () => {
-    setSelectedProduct(null);
-  };
-
-  const handleDashboardClick = () => {
-    alert("Переход в личный кабинет (ещё не реализовано)");
+  const handleLogin = (user: User) => {
+    setCurrentUser(user);
+    closeAuthModal();
   };
 
   const handleLogout = () => {
-    alert("Вы вышли из аккаунта.");
+    storageUtils.clearCurrentUser();
+    setCurrentUser(null);
+    setShowDashboard(false);
+  };
+
+  const handleDashboardClick = () => {
+    if (currentUser) {
+      if (currentUser.purchasedProducts.length === 0) {
+        setShowKeyInput(true);
+      } else {
+        setShowDashboard(true);
+      }
+    }
+  };
+
+  const scrollToShop = () => {
+    const shopElement = document.getElementById('shop');
+    if (shopElement) {
+      shopElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
   };
 
   return (
-    <div className="relative bg-black text-white min-h-screen overflow-x-hidden">
-      <FloatingElements />
-      <Header
-        currentUser={null}
-        onAuthClick={openAuthModal}
-        onSupportClick={openSupportModal}
-        onDashboardClick={handleDashboardClick}
-        onLogout={handleLogout}
-      />
-      <main className="pt-20">
-        <Hero />
-        <Features />
-        <Shop onBuyClick={handleBuyClick} />
-      </main>
-      <Footer onTermsClick={openTermsModal} />
+    <Router>
+      <Routes>
+        {/* Главная страница */}
+        <Route path="/" element={
+          showDashboard && currentUser ? (
+            <div className="relative bg-black text-white font-rajdhani overflow-x-hidden">
+              <Header 
+                currentUser={currentUser}
+                onDashboardClick={handleDashboardClick}
+                onLogout={handleLogout}
+              />
+              <Dashboard user={currentUser} onBack={() => setShowDashboard(false)} />
+              <FloatingElements />
+              {isSupportOpen && <SupportModal onClose={closeSupportModal} />}
+            </div>
+          ) : (
+            <div className="relative bg-black text-white font-rajdhani overflow-x-hidden">
+              <Header 
+                currentUser={currentUser}
+                onDashboardClick={handleDashboardClick}
+                onLogout={handleLogout}
+              />
+              <Hero onBuyClick={scrollToShop} />
+              <Features />
+              <Shop onBuyClick={openOrderModal} />
+              <Footer />
+              <FloatingElements />
 
-      {/* Модальные окна */}
-      <Auth isOpen={isAuthOpen} onClose={closeAuthModal} />
-      <SupportModal isOpen={isSupportOpen} onClose={closeSupportModal} />
-      <TermsModal isOpen={isTermsOpen} onClose={closeTermsModal} />
-      {selectedProduct && (
-        <OrderModal
-          isOpen={!!selectedProduct}
-          onClose={closeOrderModal}
-          product={selectedProduct}
-        />
-      )}
-    </div>
+              {isAuthOpen && <AuthModal onClose={closeAuthModal} onLogin={handleLogin} />}
+              {isSupportOpen && <SupportModal onClose={closeSupportModal} />}
+              {isOrderOpen && selectedProductForOrder && (
+                <OrderModal
+                  onClose={closeOrderModal} 
+                  selectedProduct={selectedProductForOrder} 
+                />
+              )}
+              {showKeyInput && (
+                <KeyInputModal 
+                  onClose={() => setShowKeyInput(false)}
+                  onSuccess={() => {
+                    setShowKeyInput(false);
+                    setShowDashboard(true);
+                  }}
+                />
+              )}
+            </div>
+          )
+        } />
+
+        {/* Страница условий пользования */}
+        <Route path="/terms" element={
+          <div className="animate-fade-in bg-black min-h-screen text-white font-rajdhani">
+            <Header
+              currentUser={currentUser}
+              onDashboardClick={handleDashboardClick}
+              onLogout={handleLogout}
+            />
+            <Terms />
+            <Footer />
+            <FloatingElements />
+          </div>
+        } />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;
