@@ -1,19 +1,16 @@
-// components/SupportModal.tsx
-import { useState } from 'react';
-import emailjs from 'emailjs-com';
+import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function SupportModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
+const SupportModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [formData, setFormData] = useState({ name: '', message: '', email: '' });
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const sendEmail = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     emailjs.send(
@@ -21,39 +18,48 @@ export default function SupportModal({ isOpen, onClose }: { isOpen: boolean; onC
       'template_hczc8ys',
       formData,
       'yUxe3xhvCjrNB-QNh'
-    ).then(() => {
-      alert('✅ Сообщение успешно отправлено!');
-      onClose();
-    }).catch((error) => {
+    )
+    .then(() => {
+      setSuccessMessage('Вы успешно отправили сообщение!');
+      setFormData({ name: '', message: '', email: '' });
+
+      // Убираем сообщение через 4 секунды
+      setTimeout(() => setSuccessMessage(''), 4000);
+    })
+    .catch((error) => {
       console.error('Ошибка отправки:', error);
-      alert('❌ Ошибка при отправке сообщения.');
     });
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#0d0d0d] border border-pink-600 rounded-2xl p-6 w-[90%] max-w-md shadow-xl neon-glow">
-        <h2 className="text-2xl font-bold text-pink-500 mb-4 text-center">Поддержка</h2>
-        <form onSubmit={sendEmail} className="flex flex-col gap-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        className="bg-[#0b0b0b] p-6 rounded-2xl border border-purple-500 shadow-xl w-[90%] max-w-md text-white font-rajdhani"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-purple-400">Поддержка</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            name="name"
             type="text"
+            name="name"
             placeholder="Ваше имя"
             value={formData.name}
             onChange={handleChange}
             required
-            className="bg-black border border-pink-500 text-white p-3 rounded outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-full p-2 rounded bg-black border border-purple-700"
           />
           <input
-            name="email"
             type="email"
-            placeholder="Ваш email"
+            name="email"
+            placeholder="Ваш Email"
             value={formData.email}
             onChange={handleChange}
             required
-            className="bg-black border border-pink-500 text-white p-3 rounded outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-full p-2 rounded bg-black border border-purple-700"
           />
           <textarea
             name="message"
@@ -61,22 +67,30 @@ export default function SupportModal({ isOpen, onClose }: { isOpen: boolean; onC
             value={formData.message}
             onChange={handleChange}
             required
-            className="bg-black border border-pink-500 text-white p-3 rounded outline-none resize-none h-28 focus:ring-2 focus:ring-pink-400"
+            className="w-full p-2 rounded bg-black border border-purple-700"
+            rows={4}
           />
           <button
             type="submit"
-            className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-4 rounded-full transition duration-200 shadow-lg"
+            className="w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded hover:opacity-90 transition"
           >
             Отправить
           </button>
+
+          {successMessage && (
+            <p className="text-green-400 text-center text-sm mt-2">{successMessage}</p>
+          )}
         </form>
+
         <button
           onClick={onClose}
-          className="mt-4 text-sm text-pink-400 hover:underline w-full text-center"
+          className="absolute top-3 right-4 text-white text-xl hover:text-red-500"
         >
-          Закрыть
+          ×
         </button>
-      </div>
+      </motion.div>
     </div>
   );
-}
+};
+
+export default SupportModal;
