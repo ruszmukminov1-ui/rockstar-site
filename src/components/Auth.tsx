@@ -1,62 +1,77 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
 
-const Auth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  const [isLogin, setIsLogin] = useState(true);
+interface AuthProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const toggleForm = () => {
-    setIsLogin((prev) => !prev);
-  };
+const Auth: React.FC<AuthProps> = ({ isOpen, onClose }) => {
+  const [tab, setTab] = useState<"login" | "register">("login");
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.8, opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="relative w-full max-w-sm sm:max-w-md md:max-w-lg bg-glass rounded-xl shadow-lg perspective"
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-white text-xl hover:text-pink-400 transition"
-        >
-          ✕
-        </button>
-
-        <div className={`flip-container ${isLogin ? '' : 'rotate'}`}>
-          {/* ВОЙТИ */}
-          <div className="flip-front p-6">
-            <h2 className="text-2xl mb-4 text-neon-pink font-bold text-center">Войти</h2>
-            <input type="text" placeholder="Email" className="auth-input w-full mb-3" />
-            <input type="password" placeholder="Пароль" className="auth-input w-full mb-4" />
-            <button className="auth-button w-full mb-4">Авторизоваться</button>
-            <p className="text-sm text-center">
-              Нет аккаунта?{' '}
-              <button onClick={toggleForm} className="text-purple-400 hover:underline">
-                Зарегистрироваться
-              </button>
-            </p>
-          </div>
-
-          {/* РЕГИСТРАЦИЯ */}
-          <div className="flip-back p-6">
-            <h2 className="text-2xl mb-4 text-neon-purple font-bold text-center">Регистрация</h2>
-            <input type="text" placeholder="Email" className="auth-input w-full mb-3" />
-            <input type="password" placeholder="Пароль" className="auth-input w-full mb-3" />
-            <input type="password" placeholder="Повторите пароль" className="auth-input w-full mb-4" />
-            <button className="auth-button w-full mb-4">Зарегистрироваться</button>
-            <p className="text-sm text-center">
-              Уже есть аккаунт?{' '}
-              <button onClick={toggleForm} className="text-pink-400 hover:underline">
-                Войти
-              </button>
-            </p>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-2">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
+      <div className="relative bg-[#111] border border-purple-500/30 text-white rounded-xl sm:rounded-2xl p-4 sm:p-8 w-full max-w-lg mx-auto animate-slide-up z-50 overflow-y-auto max-h-[90vh]">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-purple-400">
+            {tab === "login" ? "Вход" : "Регистрация"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-red-400 text-xl"
+          >
+            ✕
+          </button>
         </div>
-      </motion.div>
+
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => setTab("login")}
+            className={`w-full py-2 rounded ${
+              tab === "login"
+                ? "bg-purple-600 text-white"
+                : "bg-black border border-purple-600 text-purple-400"
+            }`}
+          >
+            Войти
+          </button>
+          <button
+            onClick={() => setTab("register")}
+            className={`w-full py-2 rounded ${
+              tab === "register"
+                ? "bg-purple-600 text-white"
+                : "bg-black border border-purple-600 text-purple-400"
+            }`}
+          >
+            Регистрация
+          </button>
+        </div>
+
+        <form className="space-y-4">
+          <input
+            type="text"
+            placeholder="Никнейм"
+            className="w-full bg-black border border-purple-600 rounded-md p-2 focus:outline-none"
+          />
+          <input
+            type="password"
+            placeholder="Пароль"
+            className="w-full bg-black border border-purple-600 rounded-md p-2 focus:outline-none"
+          />
+          {tab === "register" && (
+            <input
+              type="password"
+              placeholder="Повторите пароль"
+              className="w-full bg-black border border-purple-600 rounded-md p-2 focus:outline-none"
+            />
+          )}
+          <button type="submit" className="neon-button w-full">
+            {tab === "login" ? "Войти" : "Создать аккаунт"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
