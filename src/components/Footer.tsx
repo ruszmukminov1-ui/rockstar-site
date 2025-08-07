@@ -1,9 +1,10 @@
 import { FaTelegramPlane, FaVk, FaDiscord } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-black text-white py-8 mt-12 border-t border-purple-800">
-      {/* Значки */}
+    <footer className="relative bg-black text-white py-8 mt-12 border-t border-purple-800 font-rajdhani">
+      {/* Значки соцсетей */}
       <div className="flex justify-center gap-6 mb-4">
         <a
           href="https://vk.com/rockstarclient"
@@ -36,14 +37,18 @@ const Footer = () => {
         </a>
       </div>
 
-      {/* Текст */}
-      <div className="flex justify-center gap-6 text-sm text-gray-400">
-        <a href="#" className="hover:text-white transition duration-300">
-          Условия использования
-        </a>
-        <a href="#" className="hover:text-white transition duration-300">
-          Политика конфиденциальности
-        </a>
+      {/* Текстовые ссылки */}
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-sm text-gray-400">
+        <p className="hover:text-white transition duration-300">
+          © 2025 Rockstar Client
+        </p>
+
+        <Link
+          to="/terms"
+          className="hover:text-cyan-400 transition duration-300 underline underline-offset-2"
+        >
+          Условия пользования
+        </Link>
       </div>
     </footer>
   );
