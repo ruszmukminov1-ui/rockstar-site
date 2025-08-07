@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
               <Star className="text-purple-500" />
               <span className="tech-font text-xl font-bold">ROCKSTAR CLIENT</span>
             </div>
-            <p className="text-sm text-gray-400 mt-2">© 2025 Rockstar Client. Все права защищены.</p>
+            <p className="text-sm text-gray-400 mt-2"> </p>
           </div>
           
           <div className="flex space-x-6 mb-4 md:mb-0">
