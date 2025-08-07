@@ -1,21 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
 const FloatingElements: React.FC = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   const floatingElements = [
     // Small particles
     { size: 'w-2 h-2', color: 'bg-purple-500', opacity: 'opacity-30', blur: 'blur-none', delay: 0 },
@@ -62,32 +48,6 @@ const FloatingElements: React.FC = () => {
             repeat: Infinity,
             ease: "easeInOut",
             delay: element.delay,
-          }}
-          whileHover={{
-            scale: 1.2,
-            transition: { duration: 0.3 }
-          }}
-        />
-      ))}
-      
-      {/* Mouse-reactive elements */}
-      {[...Array(5)].map((_, index) => (
-        <motion.div
-          key={`reactive-${index}`}
-          className="absolute w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 opacity-10 blur-md"
-          style={{
-            left: `${20 + index * 15}%`,
-            top: `${30 + index * 10}%`,
-          }}
-          animate={{
-            x: mousePosition.x * (10 + index * 5),
-            y: mousePosition.y * (10 + index * 5),
-            rotate: mousePosition.x * 45,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 50,
-            damping: 20,
           }}
         />
       ))}
