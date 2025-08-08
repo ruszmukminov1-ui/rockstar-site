@@ -80,13 +80,13 @@ const Shop: React.FC<ShopProps> = ({ onBuyClick }) => {
             transition={{ duration: 0.6, delay: index * 0.1 }}
             className={`relative border rounded-2xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 ${
               product.isPopular
-                ? 'border-purple-500 bg-gradient-to-b from-purple-900/30 to-pink-900/20 shadow-lg shadow-purple-500/25'
-                : 'border-gray-700 bg-black/40 hover:border-purple-500/50'
+                ? 'border-purple-500 bg-gradient-to-br from-purple-900/50 to-pink-900/30 shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60'
+                : 'border-gray-700 bg-gradient-to-br from-gray-900/50 to-black/60 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/20'
             }`}
           >
             {product.isPopular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center space-x-1">
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center space-x-1 shadow-lg animate-pulse">
                   <Star className="w-4 h-4" />
                   <span>Популярный</span>
                 </div>
@@ -94,16 +94,16 @@ const Shop: React.FC<ShopProps> = ({ onBuyClick }) => {
             )}
 
             <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold mb-2 text-white">{product.title}</h3>
+              <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{product.title}</h3>
               <p className="text-lg text-purple-400 font-semibold mb-4">{product.duration}</p>
-              <div className="text-3xl font-bold text-white mb-2">{product.price}</div>
+              <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">{product.price}</div>
             </div>
 
             <ul className="space-y-3 mb-8">
               {product.features.map((feature, featureIndex) => (
                 <li key={featureIndex} className="flex items-center space-x-3">
                   <Check className="w-5 h-5 text-green-400 flex-shrink-0" />
-                  <span className="text-gray-300">{feature}</span>
+                  <span className="text-gray-200 font-medium">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -112,8 +112,8 @@ const Shop: React.FC<ShopProps> = ({ onBuyClick }) => {
               onClick={() => onBuyClick(product)}
               className={`w-full font-semibold py-3 rounded-full transition-all duration-300 ${
                 product.isPopular
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-purple-500/50'
-                  : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-purple-600 hover:to-pink-600 text-white'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-xl hover:shadow-purple-500/60 border border-purple-400/50'
+                  : 'bg-gradient-to-r from-gray-700 to-gray-600 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-purple-500/40 border border-gray-600 hover:border-purple-400/50'
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

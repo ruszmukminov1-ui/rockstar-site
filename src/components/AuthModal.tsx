@@ -3,13 +3,15 @@ import { motion } from "framer-motion";
 import { User } from '../types/User';
 import { storageUtils } from '../utils/storage';
 import { X } from 'lucide-react';
+import { generateAccessKey } from '../utils/keyGenerator';
 
 interface AuthModalProps {
   onClose: () => void;
   onLogin: (user: User) => void;
+  onShowNotification: (message: string, type: 'success' | 'error') => void;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin, onShowNotification }) => {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [formData, setFormData] = useState({
     email: '',
@@ -86,6 +88,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
         }
         
         storageUtils.setCurrentUser(existingUser);
+        onShowNotification('Вы успешно вошли!', 'success');
         onLogin(existingUser);
         
       } else {
@@ -102,7 +105,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
           id: Date.now().toString(),
           email: formData.email,
           password: formData.password,
-          accessKey: '',
+          accessKey: generateAccessKey(),
           purchasedProducts: [],
           createdAt: new Date().toISOString(),
         };
@@ -110,10 +113,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
         storageUtils.saveUser(newUser);
         storageUtils.setCurrentUser(newUser);
         
+        onShowNotification('Вы успешно зарегистрированы!', 'success');
         onLogin(newUser);
       }
     } catch (error) {
       setErrors(['Произошла ошибка. Попробуйте снова.']);
+      onShowNotification('Произошла ошибка. Попробуйте снова.', 'error');
     }
     
     setIsLoading(false);

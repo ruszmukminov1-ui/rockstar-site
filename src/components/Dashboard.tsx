@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { User, ArrowLeft, Download, Clock, HardDrive, Shield } from 'lucide-react';
+import { User, ArrowLeft, Download, Clock, HardDrive, Shield, Key, Monitor } from 'lucide-react';
 import { User as UserType } from '../types/User';
 
 interface DashboardProps {
@@ -10,7 +10,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
   return (
-    <div className="min-h-screen bg-black text-white pt-20 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-20 p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-500/50 rounded-xl p-6 mb-8 backdrop-blur-sm"
+          className="bg-gradient-to-r from-purple-900/50 to-pink-900/40 border border-purple-500/50 rounded-xl p-6 mb-8 backdrop-blur-sm shadow-2xl shadow-purple-500/20"
         >
           <div className="flex items-center space-x-4">
             <div className="bg-purple-600 p-3 rounded-full">
@@ -51,7 +51,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
               <h3 className="text-xl font-semibold">Информация об аккаунте</h3>
               <p className="text-gray-300">Email: {user.email}</p>
               {user.accessKey && (
-                <p className="text-gray-300">Ключ доступа: {user.accessKey}</p>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Key size={16} className="text-cyan-400" />
+                  <p className="text-cyan-300 font-mono">{user.accessKey}</p>
+                </div>
               )}
               <p className="text-gray-300">Дата регистрации: {new Date(user.createdAt).toLocaleDateString('ru-RU')}</p>
             </div>
@@ -83,7 +86,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                  className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-500/50 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
+                  className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-purple-500/50 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40 backdrop-blur-sm"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold text-purple-400">{product.title}</h3>
@@ -108,6 +111,20 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
                       <span className="text-sm">ОЗУ: {product.ramSize}</span>
                     </div>
                     
+                    {product.minecraftVersion && (
+                      <div className="flex items-center space-x-2">
+                        <Monitor size={16} className="text-cyan-400" />
+                        <span className="text-sm">Minecraft: {product.minecraftVersion}</span>
+                      </div>
+                    )}
+                    
+                    {product.accessKey && (
+                      <div className="flex items-center space-x-2">
+                        <Key size={16} className="text-yellow-400" />
+                        <span className="text-sm font-mono text-yellow-300">{product.accessKey}</span>
+                      </div>
+                    )}
+                    
                     <div className="pt-2 border-t border-gray-700">
                       <p className="text-xs text-gray-400">
                         Куплено: {new Date(product.purchaseDate).toLocaleDateString('ru-RU')}
@@ -120,9 +137,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
                     </div>
                   </div>
                   
-                  <button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-2 rounded-lg transition-all duration-300 hover:scale-105 font-semibold">
+                  <motion.button 
+                    className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-2 rounded-lg transition-all duration-300 font-semibold shadow-lg hover:shadow-purple-500/40"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     Скачать
-                  </button>
+                  </motion.button>
                 </motion.div>
               ))}
             </div>

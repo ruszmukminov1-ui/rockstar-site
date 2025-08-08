@@ -15,6 +15,8 @@ export interface PurchasedProduct {
   version: string;
   duration: string;
   ramSize: string;
+  minecraftVersion?: string;
+  accessKey?: string;
   purchaseDate: string;
   expiryDate?: string;
 }

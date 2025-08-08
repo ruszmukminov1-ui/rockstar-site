@@ -13,6 +13,8 @@ import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 import SupportModal from "./components/SupportModal";
 import OrderModal from "./components/OrderModal";
+import NotificationToast from "./components/NotificationToast";
+import VideoReviews from "./components/VideoReviews";
 import FloatingElements from "./components/FloatingElements";
 import Dashboard from "./components/Dashboard";
 import KeyInputModal from "./components/KeyInputModal";
@@ -38,7 +40,23 @@ function App() {
 
   const [showDashboard, setShowDashboard] = useState(false);
   const [showKeyInput, setShowKeyInput] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: 'success' | 'error';
+    isVisible: boolean;
+  }>({
+    message: '',
+    type: 'success',
+    isVisible: false
+  });
 
+  const showNotification = (message: string, type: 'success' | 'error') => {
+    setNotification({ message, type, isVisible: true });
+  };
+
+  const hideNotification = () => {
+    setNotification(prev => ({ ...prev, isVisible: false }));
+  };
   useEffect(() => {
     const existingUser = storageUtils.getCurrentUser();
     if (existingUser) {
@@ -55,15 +73,12 @@ function App() {
     storageUtils.clearCurrentUser();
     setCurrentUser(null);
     setShowDashboard(false);
+    showNotification('Вы успешно вышли из аккаунта', 'success');
   };
 
   const handleDashboardClick = () => {
     if (currentUser) {
-      if (currentUser.purchasedProducts.length === 0) {
-        setShowKeyInput(true);
-      } else {
-        setShowDashboard(true);
-      }
+      setShowDashboard(true);
     }
   };
 
@@ -79,6 +94,13 @@ function App() {
 
   return (
     <Router>
+      <NotificationToast
+        message={notification.message}
+        type={notification.type}
+        isVisible={notification.isVisible}
+        onClose={hideNotification}
+      />
+      
       <Routes>
         {/* Главная страница */}
         <Route path="/" element={
@@ -103,15 +125,23 @@ function App() {
               <Hero onBuyClick={scrollToShop} />
               <Features />
               <Shop onBuyClick={openOrderModal} />
+              <VideoReviews />
               <Footer />
               <FloatingElements />
 
-              {isAuthOpen && <AuthModal onClose={closeAuthModal} onLogin={handleLogin} />}
+              {isAuthOpen && (
+                <AuthModal 
+                  onClose={closeAuthModal} 
+                  onLogin={handleLogin}
+                  onShowNotification={showNotification}
+                />
+              )}
               {isSupportOpen && <SupportModal onClose={closeSupportModal} />}
               {isOrderOpen && selectedProductForOrder && (
                 <OrderModal
                   onClose={closeOrderModal} 
                   selectedProduct={selectedProductForOrder} 
+                  onShowNotification={showNotification}
                 />
               )}
               {showKeyInput && (

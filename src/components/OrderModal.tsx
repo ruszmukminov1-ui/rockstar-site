@@ -3,28 +3,21 @@ import { motion } from "framer-motion";
 import { Product } from "../types/Product";
 import { PurchasedProduct } from "../types/User";
 import { storageUtils } from "../utils/storage";
+import { generateAccessKey } from "../utils/keyGenerator";
 import { X, CreditCard } from "lucide-react";
 
 interface OrderModalProps {
   onClose: () => void;
   selectedProduct: Product;
+  onShowNotification: (message: string, type: 'success' | 'error') => void;
 }
 
 const OrderModal: React.FC<OrderModalProps> = ({
   onClose,
   selectedProduct,
+  onShowNotification,
 }) => {
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [email, setEmail] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const paymentMethods = [
-    { id: "sber", name: "Сбербанк" },
-    { id: "tinkoff", name: "Тинькофф" },
-    { id: "vtb", name: "ВТБ" },
-    { id: "card", name: "Банковская карта" },
-    { id: "qiwi", name: "QIWI" },
-  ];
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -36,25 +29,24 @@ const OrderModal: React.FC<OrderModalProps> = ({
 
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!paymentMethod || !email) {
-      alert("Заполните все поля");
-      return;
-    }
-    
     setIsProcessing(true);
     
-    // Simulate payment processing
+    // Имитация бесплатной покупки
     setTimeout(() => {
       const currentUser = storageUtils.getCurrentUser();
       
       if (currentUser) {
+        // Генерируем уникальный ключ
+        const accessKey = generateAccessKey();
+        
         const purchasedProduct: PurchasedProduct = {
           id: selectedProduct.id,
           title: selectedProduct.title,
           version: "2.0.1",
           duration: selectedProduct.duration,
-          ramSize: "8 ГБ",
+          ramSize: "8 ГБ", 
+          minecraftVersion: "1.20.1",
+          accessKey: accessKey,
           purchaseDate: new Date().toISOString(),
           expiryDate: selectedProduct.duration !== "Навсегда" 
             ? new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
@@ -62,12 +54,14 @@ const OrderModal: React.FC<OrderModalProps> = ({
         };
         
         storageUtils.addPurchasedProduct(currentUser.id, purchasedProduct);
+        onShowNotification(`Покупка успешна! Ваш ключ: ${accessKey}`, 'success');
+      } else {
+        onShowNotification('Ошибка: пользователь не найден', 'error');
       }
       
-      alert(`Покупка успешно завершена! ${selectedProduct.title} будет доступен в личном кабинете.`);
       setIsProcessing(false);
       onClose();
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -123,41 +117,18 @@ const OrderModal: React.FC<OrderModalProps> = ({
           <div className="border-t border-gray-700 pt-2">
             <div className="flex justify-between items-center">
               <span className="text-lg font-semibold">Итого:</span>
-              <span className="text-2xl font-bold text-green-400">{selectedProduct.price}</span>
+              <span className="text-2xl font-bold text-green-400">БЕСПЛАТНО</span>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handlePurchase} className="space-y-4">
-          <div>
-            <label className="block text-gray-300 mb-2">Способ оплаты</label>
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
-              required
-            >
-              <option value="">Выберите способ оплаты</option>
-              {paymentMethods.map((method) => (
-                <option key={method.id} value={method.id}>
-                  {method.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="mb-6 p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
+          <p className="text-green-300 text-center font-semibold">
+            🎉 Специальное предложение: получите чит бесплатно!
+          </p>
+        </div>
 
-          <div>
-            <label className="block text-gray-300 mb-2">Email для получения лицензии</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="w-full px-4 py-3 bg-gray-800/50 border border-green-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
-              required
-            />
-          </div>
-
+        <form onSubmit={handlePurchase}>
           <motion.button
             type="submit"
             disabled={isProcessing}
@@ -168,10 +139,10 @@ const OrderModal: React.FC<OrderModalProps> = ({
             {isProcessing ? (
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Обработка платежа...</span>
+                <span>Получение чита...</span>
               </div>
             ) : (
-              `Оплатить ${selectedProduct.price}`
+              'Получить бесплатно'
             )}
           </motion.button>
         </form>
