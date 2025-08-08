@@ -6,8 +6,22 @@ import { generateAccessKey } from "../utils/keyGenerator";
 import { X, CreditCard } from "lucide-react";
 import { useApp } from "../context/AppContext";
 
+<<<<<<< HEAD
 const OrderModal: React.FC = () => {
   const { isOrderOpen, closeOrderModal, selectedProductForOrder, currentUser, t } = useApp();
+=======
+interface OrderModalProps {
+  onClose: () => void;
+  selectedProduct: Product;
+  onShowNotification: (message: string, type: 'success' | 'error') => void;
+}
+
+const OrderModal: React.FC<OrderModalProps> = ({
+  onClose,
+  selectedProduct,
+  onShowNotification,
+}) => {
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -21,17 +35,32 @@ const OrderModal: React.FC = () => {
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-
+    
+<<<<<<< HEAD
+    // Simulate free purchase
     setTimeout(() => {
       if (currentUser && selectedProductForOrder) {
+        // Generate unique key
+=======
+    // Имитация бесплатной покупки
+    setTimeout(() => {
+      const currentUser = storageUtils.getCurrentUser();
+      
+      if (currentUser) {
+        // Генерируем уникальный ключ
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
         const accessKey = generateAccessKey();
-
+        
         const purchasedProduct: PurchasedProduct = {
           id: selectedProductForOrder.id,
           title: selectedProductForOrder.title,
           version: "2.0.1",
+<<<<<<< HEAD
           duration: selectedProductForOrder.duration,
-          ramSize: "8 ГБ",
+=======
+          duration: selectedProduct.duration,
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
+          ramSize: "8 ГБ", 
           minecraftVersion: "1.20.1",
           accessKey: accessKey,
           purchaseDate: new Date().toISOString(),
@@ -39,15 +68,19 @@ const OrderModal: React.FC = () => {
             ? new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
             : undefined
         };
-
+        
         storageUtils.addPurchasedProduct(currentUser.id, purchasedProduct);
-        alert(`Покупка успешна! Ваш ключ: ${accessKey}`);
+        onShowNotification(`Покупка успешна! Ваш ключ: ${accessKey}`, 'success');
       } else {
-        alert('Ошибка: пользователь не найден');
+        onShowNotification('Ошибка: пользователь не найден', 'error');
       }
-
+      
       setIsProcessing(false);
+<<<<<<< HEAD
       closeOrderModal();
+=======
+      onClose();
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
     }, 1500);
   };
 
@@ -105,15 +138,26 @@ const OrderModal: React.FC = () => {
           </div>
           <div className="border-t border-gray-700 pt-2">
             <div className="flex justify-between items-center">
+<<<<<<< HEAD
               <span className="text-base md:text-lg font-semibold">{t('order.total')}</span>
               <span className="text-xl md:text-2xl font-bold text-green-400">{t('order.free')}</span>
+=======
+              <span className="text-lg font-semibold">Итого:</span>
+              <span className="text-2xl font-bold text-green-400">БЕСПЛАТНО</span>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
             </div>
           </div>
         </div>
 
+<<<<<<< HEAD
         <div className="mb-4 md:mb-6 p-3 md:p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
           <p className="text-green-300 text-center font-semibold text-sm md:text-base">
             {t('order.specialOffer')}
+=======
+        <div className="mb-6 p-4 bg-green-900/30 border border-green-500/30 rounded-lg">
+          <p className="text-green-300 text-center font-semibold">
+            🎉 Специальное предложение: получите чит бесплатно!
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
           </p>
         </div>
 
@@ -128,10 +172,17 @@ const OrderModal: React.FC = () => {
             {isProcessing ? (
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+<<<<<<< HEAD
                 <span>{t('order.processing')}</span>
               </div>
             ) : (
               t('order.getFree')
+=======
+                <span>Получение чита...</span>
+              </div>
+            ) : (
+              'Получить бесплатно'
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
             )}
           </motion.button>
         </form>
