@@ -3,13 +3,22 @@ import { motion } from "framer-motion";
 import { User } from '../types/User';
 import { storageUtils } from '../utils/storage';
 import { X } from 'lucide-react';
+import { generateAccessKey } from '../utils/keyGenerator';
+<<<<<<< HEAD
+import { useApp } from '../context/AppContext';
+
+const AuthModal: React.FC = () => {
+  const { isAuthOpen, closeAuthModal, setCurrentUser, t } = useApp();
+=======
 
 interface AuthModalProps {
   onClose: () => void;
   onLogin: (user: User) => void;
+  onShowNotification: (message: string, type: 'success' | 'error') => void;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin, onShowNotification }) => {
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [formData, setFormData] = useState({
     email: '',
@@ -19,13 +28,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Load saved credentials
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rockstar_saved_email');
+    if (savedEmail) {
+      setFormData(prev => ({ ...prev, email: savedEmail }));
+    }
+  }, []);
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") closeAuthModal();
     };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
+  }, [closeAuthModal]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,20 +54,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
     const newErrors: string[] = [];
     
     if (!formData.email) {
-      newErrors.push('Email обязателен');
+      newErrors.push(t('error.required'));
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.push('Неверный формат email');
+      newErrors.push(t('error.emailFormat'));
     }
     
     if (!formData.password) {
-      newErrors.push('Пароль обязателен');
+      newErrors.push(t('error.required'));
     } else if (formData.password.length < 6) {
-      newErrors.push('Пароль должен содержать минимум 6 символов');
+      newErrors.push(t('error.passwordLength'));
     }
     
     if (activeTab === 'register') {
       if (formData.password !== formData.confirmPassword) {
-        newErrors.push('Пароли не совпадают');
+        newErrors.push(t('error.passwordMismatch'));
       }
     }
     
@@ -74,26 +91,34 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
         const existingUser = storageUtils.getUserByEmail(formData.email);
         
         if (!existingUser) {
-          setErrors(['Пользователь не найден']);
+          setErrors([t('error.userNotFound')]);
           setIsLoading(false);
           return;
         }
         
         if (existingUser.password !== formData.password) {
-          setErrors(['Неверный пароль']);
+          setErrors([t('error.wrongPassword')]);
           setIsLoading(false);
           return;
         }
         
+        // Save email for future logins
+        localStorage.setItem('rockstar_saved_email', formData.email);
+        
         storageUtils.setCurrentUser(existingUser);
+<<<<<<< HEAD
+        setCurrentUser(existingUser);
+=======
+        onShowNotification('Вы успешно вошли!', 'success');
         onLogin(existingUser);
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
         
       } else {
         // Registration logic
         const existingUser = storageUtils.getUserByEmail(formData.email);
         
         if (existingUser) {
-          setErrors(['Пользователь с таким email уже существует']);
+          setErrors([t('error.userExists')]);
           setIsLoading(false);
           return;
         }
@@ -102,22 +127,39 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
           id: Date.now().toString(),
           email: formData.email,
           password: formData.password,
-          accessKey: '',
+          accessKey: generateAccessKey(),
           purchasedProducts: [],
           createdAt: new Date().toISOString(),
         };
         
+        // Save email for future logins
+        localStorage.setItem('rockstar_saved_email', formData.email);
+        
         storageUtils.saveUser(newUser);
         storageUtils.setCurrentUser(newUser);
+<<<<<<< HEAD
+        setCurrentUser(newUser);
+=======
         
+        onShowNotification('Вы успешно зарегистрированы!', 'success');
         onLogin(newUser);
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
       }
+      
+      closeAuthModal();
     } catch (error) {
+<<<<<<< HEAD
+      setErrors([t('error.generic')]);
+=======
       setErrors(['Произошла ошибка. Попробуйте снова.']);
+      onShowNotification('Произошла ошибка. Попробуйте снова.', 'error');
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
     }
     
     setIsLoading(false);
   };
+
+  if (!isAuthOpen) return null;
 
   return (
     <motion.div
@@ -125,57 +167,57 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-      onClick={onClose}
+      onClick={closeAuthModal}
     >
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative w-full max-w-md p-8 bg-gray-900/95 backdrop-blur-md border border-purple-500/50 rounded-2xl shadow-2xl shadow-purple-500/25"
+        className="relative w-full max-w-sm md:max-w-md p-6 md:p-8 bg-gray-900/95 backdrop-blur-md border border-purple-500/50 rounded-2xl shadow-2xl shadow-purple-500/25"
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          onClick={closeAuthModal}
+          className="absolute top-3 right-3 md:top-4 md:right-4 text-gray-400 hover:text-white transition-colors"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
 
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            {activeTab === 'login' ? 'Вход' : 'Регистрация'}
+        <div className="text-center mb-6 md:mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            {activeTab === 'login' ? t('auth.login') : t('auth.register')}
           </h2>
         </div>
 
-        <div className="flex mb-6 bg-gray-800/50 rounded-lg p-1">
+        <div className="flex mb-4 md:mb-6 bg-gray-800/50 rounded-lg p-1">
           <button
             onClick={() => {
               setActiveTab("login");
               setErrors([]);
-              setFormData({ email: '', password: '', confirmPassword: '' });
+              setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
             }}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-all ${
+            className={`flex-1 py-2 px-3 md:px-4 rounded-md text-sm font-semibold transition-all ${
               activeTab === "login"
                 ? "bg-purple-600 text-white shadow-lg"
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            Вход
+            {t('auth.login')}
           </button>
           <button
             onClick={() => {
               setActiveTab("register");
               setErrors([]);
-              setFormData({ email: '', password: '', confirmPassword: '' });
+              setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
             }}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-all ${
+            className={`flex-1 py-2 px-3 md:px-4 rounded-md text-sm font-semibold transition-all ${
               activeTab === "register"
                 ? "bg-purple-600 text-white shadow-lg"
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            Регистрация
+            {t('auth.register')}
           </button>
         </div>
 
@@ -192,15 +234,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
           </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
           <div>
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder={t('auth.email')}
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-gray-800/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-gray-800/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all text-sm md:text-base"
               required
             />
           </div>
@@ -209,10 +251,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
             <input
               type="password"
               name="password"
-              placeholder="Пароль"
+              placeholder={t('auth.password')}
               value={formData.password}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-gray-800/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-gray-800/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all text-sm md:text-base"
               required
             />
           </div>
@@ -222,10 +264,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
               <input
                 type="password"
                 name="confirmPassword"
-                placeholder="Повторите пароль"
+                placeholder={t('auth.confirmPassword')}
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-gray-800/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                className="w-full px-3 md:px-4 py-2.5 md:py-3 bg-gray-800/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all text-sm md:text-base"
                 required
               />
             </div>
@@ -234,11 +276,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
           <motion.button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-purple-500/25"
+            className="w-full py-2.5 md:py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-purple-500/25 text-sm md:text-base"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isLoading ? 'Загрузка...' : (activeTab === "login" ? "Войти" : "Зарегистрироваться")}
+            {isLoading ? t('auth.loading') : (activeTab === "login" ? t('auth.loginButton') : t('auth.registerButton'))}
           </motion.button>
         </form>
       </motion.div>

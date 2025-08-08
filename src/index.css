@@ -1,89 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+/* ======== Tailwind Base ======== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ======== Кастомные шрифты и базовые стили ======== */
+/* ======== Global Styles ======== */
+
 body {
-  @apply bg-black text-white font-rajdhani antialiased;
+  @apply bg-black text-white font-rajdhani overflow-x-hidden;
 }
 
-/* ======== Неоновый текст и кнопки ======== */
 .neon-text {
-  color: #a855f7;
-  text-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7, 0 0 20px #a855f7;
+  text-shadow: 0 0 5px #fff, 0 0 10px #f0f, 0 0 20px #f0f, 0 0 40px #f0f;
 }
 
-.neon-button {
-  @apply px-6 py-2 rounded-full font-bold uppercase transition duration-300;
-  background: linear-gradient(90deg, #a855f7, #ec4899);
-  color: white;
-  box-shadow: 0 0 10px #a855f7, 0 0 20px #ec4899;
+.glow-button {
+  @apply bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-6 rounded-full shadow-lg transition duration-300;
 }
 
-.neon-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #a855f7, 0 0 25px #ec4899;
+.glow-button:hover {
+  @apply scale-105 from-pink-600 to-purple-700;
 }
 
-/* ======== Неоновая рамка (для карточек, модалок) ======== */
-.neon-box {
-  @apply rounded-2xl border border-purple-500/40 p-6 shadow-lg;
-  background-color: rgba(15, 15, 15, 0.8);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
-}
-
-/* ======== Анимации ========== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-/* 🔥 Добавлена Анимация slideUp для страницы условий пользования */
-@keyframes slideUp {
-  0% {
-    opacity: 0;
-    transform: translateY(80px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-slide-up {
-  animation: slideUp 0.7s ease-out forwards;
-}
-
-/* ======= Scrollbar кастомизация ======= */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #a855f7;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-track {
-  background: #1f1f1f;
-}
-
-/* ======= Выделение текста ======= */
-::selection {
-  background: rgba(168, 85, 247, 0.3);
-  color: white;
-}
-
-::-moz-selection {
-  background: rgba(168, 85, 247, 0.3);
-  color: white;
+.blur-bg {
+  @apply bg-black bg-opacity-50 backdrop-blur-lg;
 }
