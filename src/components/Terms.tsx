@@ -2,13 +2,13 @@ import React from 'react';
 
 const Terms = () => {
   return (
-    <div className="min-h-screen bg-black text-white font-rajdhani px-4 py-12 animate-fade-in">
-      <div className="max-w-4xl mx-auto bg-[#0f0f0f] p-6 rounded-2xl shadow-lg border border-purple-500/30 backdrop-blur-md">
-        <h1 className="text-4xl font-bold text-purple-400 mb-6 text-center drop-shadow-md">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-black text-white font-rajdhani">
+      <div className="w-full max-w-4xl bg-[#0f0f0f] p-6 md:p-10 rounded-2xl shadow-lg border border-purple-500/30 backdrop-blur-md animate-slide-up">
+        <h1 className="text-3xl md:text-4xl font-bold text-purple-400 mb-6 text-center drop-shadow-md">
           Условия пользования
         </h1>
 
-        <div className="space-y-6 text-gray-300 leading-relaxed">
+        <div className="space-y-6 text-gray-300 text-sm md:text-base leading-relaxed">
           <p><strong>1. Общие положения</strong><br />
             Используя данный сайт, вы соглашаетесь соблюдать все условия, изложенные ниже. Если вы не согласны с ними — покиньте сайт.
           </p>
@@ -29,7 +29,7 @@ const Terms = () => {
             Администрация оставляет за собой право изменять условия в любое время без предварительного уведомления.
           </p>
 
-          <p className="text-sm text-gray-500 mt-8 text-center">
+          <p className="text-xs text-gray-500 mt-8 text-center">
             Последнее обновление: 07 августа 2025
           </p>
         </div>
