@@ -84,24 +84,43 @@ const Shop: React.FC = () => {
           >
             {product.isPopular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+<<<<<<< HEAD
                 <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 md:px-4 py-1 rounded-full text-xs md:text-sm font-semibold flex items-center space-x-1 shadow-lg animate-pulse">
                   <Star className="w-3 h-3 md:w-4 md:h-4" />
                   <span>{t('shop.popular')}</span>
+=======
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center space-x-1 shadow-lg animate-pulse">
+                  <Star className="w-4 h-4" />
+                  <span>Популярный</span>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                 </div>
               </div>
             )}
 
+<<<<<<< HEAD
             <div className="text-center mb-4 md:mb-6">
               <h3 className="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{product.title}</h3>
               <p className="text-base md:text-lg text-purple-400 font-semibold mb-3 md:mb-4">{product.duration}</p>
               <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">{product.price}</div>
+=======
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{product.title}</h3>
+              <p className="text-lg text-purple-400 font-semibold mb-4">{product.duration}</p>
+              <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">{product.price}</div>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
             </div>
 
             <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
               {product.features.map((feature, featureIndex) => (
+<<<<<<< HEAD
                 <li key={featureIndex} className="flex items-center space-x-2 md:space-x-3">
                   <Check className="w-4 h-4 md:w-5 md:h-5 text-green-400 flex-shrink-0" />
                   <span className="text-gray-200 font-medium text-sm md:text-base">{feature}</span>
+=======
+                <li key={featureIndex} className="flex items-center space-x-3">
+                  <Check className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span className="text-gray-200 font-medium">{feature}</span>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                 </li>
               ))}
             </ul>

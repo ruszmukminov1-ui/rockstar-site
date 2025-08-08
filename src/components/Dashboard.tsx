@@ -13,7 +13,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
   const { t } = useApp();
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-16 md:pt-20 p-4 md:p-6">
+=======
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white pt-20 p-6">
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -44,7 +48,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
+<<<<<<< HEAD
           className="bg-gradient-to-r from-purple-900/50 to-pink-900/40 border border-purple-500/50 rounded-xl p-4 md:p-6 mb-6 md:mb-8 backdrop-blur-sm shadow-2xl shadow-purple-500/20"
+=======
+          className="bg-gradient-to-r from-purple-900/50 to-pink-900/40 border border-purple-500/50 rounded-xl p-6 mb-8 backdrop-blur-sm shadow-2xl shadow-purple-500/20"
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
         >
           <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
             <div className="bg-purple-600 p-2 md:p-3 rounded-full w-fit">
@@ -54,9 +62,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
               <h3 className="text-lg md:text-xl font-semibold">{t('dashboard.accountInfo')}</h3>
               <p className="text-gray-300 text-sm md:text-base">{t('dashboard.email')} {user.email}</p>
               {user.accessKey && (
+<<<<<<< HEAD
                 <div className="flex flex-col md:flex-row md:items-center space-y-1 md:space-y-0 md:space-x-2 mt-1">
                   <Key size={14} className="text-cyan-400 hidden md:block" />
                   <p className="text-cyan-300 font-mono text-xs md:text-sm break-all">{user.accessKey}</p>
+=======
+                <div className="flex items-center space-x-2 mt-1">
+                  <Key size={16} className="text-cyan-400" />
+                  <p className="text-cyan-300 font-mono">{user.accessKey}</p>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                 </div>
               )}
               <p className="text-gray-300 text-sm">{t('dashboard.registered')} {new Date(user.createdAt).toLocaleDateString('ru-RU')}</p>
@@ -89,7 +103,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+<<<<<<< HEAD
                   className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-purple-500/50 rounded-xl p-4 md:p-6 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40 backdrop-blur-sm"
+=======
+                  className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 border border-purple-500/50 rounded-xl p-6 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/40 backdrop-blur-sm"
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                 >
                   <div className="flex items-center justify-between mb-3 md:mb-4">
                     <h3 className="text-lg md:text-xl font-bold text-purple-400">{product.title}</h3>
@@ -116,15 +134,25 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
                     
                     {product.minecraftVersion && (
                       <div className="flex items-center space-x-2">
+<<<<<<< HEAD
                         <Monitor size={14} className="text-cyan-400" />
                         <span className="text-xs md:text-sm">{t('dashboard.minecraft')} {product.minecraftVersion}</span>
+=======
+                        <Monitor size={16} className="text-cyan-400" />
+                        <span className="text-sm">Minecraft: {product.minecraftVersion}</span>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                       </div>
                     )}
                     
                     {product.accessKey && (
                       <div className="flex items-center space-x-2">
+<<<<<<< HEAD
                         <Key size={14} className="text-yellow-400" />
                         <span className="text-xs md:text-sm font-mono text-yellow-300 break-all">{product.accessKey}</span>
+=======
+                        <Key size={16} className="text-yellow-400" />
+                        <span className="text-sm font-mono text-yellow-300">{product.accessKey}</span>
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                       </div>
                     )}
                     
@@ -141,11 +169,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onBack }) => {
                   </div>
                   
                   <motion.button 
+<<<<<<< HEAD
                     className="w-full mt-3 md:mt-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-2 rounded-lg transition-all duration-300 font-semibold shadow-lg hover:shadow-purple-500/40 text-sm md:text-base"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     {t('dashboard.download')}
+=======
+                    className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-2 rounded-lg transition-all duration-300 font-semibold shadow-lg hover:shadow-purple-500/40"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Скачать
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
                   </motion.button>
                 </motion.div>
               ))}

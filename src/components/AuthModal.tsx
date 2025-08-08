@@ -4,10 +4,21 @@ import { User } from '../types/User';
 import { storageUtils } from '../utils/storage';
 import { X } from 'lucide-react';
 import { generateAccessKey } from '../utils/keyGenerator';
+<<<<<<< HEAD
 import { useApp } from '../context/AppContext';
 
 const AuthModal: React.FC = () => {
   const { isAuthOpen, closeAuthModal, setCurrentUser, t } = useApp();
+=======
+
+interface AuthModalProps {
+  onClose: () => void;
+  onLogin: (user: User) => void;
+  onShowNotification: (message: string, type: 'success' | 'error') => void;
+}
+
+const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin, onShowNotification }) => {
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [formData, setFormData] = useState({
     email: '',
@@ -95,7 +106,12 @@ const AuthModal: React.FC = () => {
         localStorage.setItem('rockstar_saved_email', formData.email);
         
         storageUtils.setCurrentUser(existingUser);
+<<<<<<< HEAD
         setCurrentUser(existingUser);
+=======
+        onShowNotification('Вы успешно вошли!', 'success');
+        onLogin(existingUser);
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
         
       } else {
         // Registration logic
@@ -121,12 +137,23 @@ const AuthModal: React.FC = () => {
         
         storageUtils.saveUser(newUser);
         storageUtils.setCurrentUser(newUser);
+<<<<<<< HEAD
         setCurrentUser(newUser);
+=======
+        
+        onShowNotification('Вы успешно зарегистрированы!', 'success');
+        onLogin(newUser);
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
       }
       
       closeAuthModal();
     } catch (error) {
+<<<<<<< HEAD
       setErrors([t('error.generic')]);
+=======
+      setErrors(['Произошла ошибка. Попробуйте снова.']);
+      onShowNotification('Произошла ошибка. Попробуйте снова.', 'error');
+>>>>>>> 57bc86e44039985442a98621c79732284d50d81d
     }
     
     setIsLoading(false);
