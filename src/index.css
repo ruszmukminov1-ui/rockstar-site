@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+/* ======== Tailwind Base ======== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+<<<<<<< HEAD
 /* ======== Кастомные шрифты и базовые стили ======== */
 body {
   @apply bg-black text-white font-rajdhani antialiased;
@@ -86,4 +90,26 @@ body {
 ::-moz-selection {
   background: rgba(168, 85, 247, 0.3);
   color: white;
+=======
+/* ======== Global Styles ======== */
+
+body {
+  @apply bg-black text-white font-rajdhani overflow-x-hidden;
+}
+
+.neon-text {
+  text-shadow: 0 0 5px #fff, 0 0 10px #f0f, 0 0 20px #f0f, 0 0 40px #f0f;
+}
+
+.glow-button {
+  @apply bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-6 rounded-full shadow-lg transition duration-300;
+}
+
+.glow-button:hover {
+  @apply scale-105 from-pink-600 to-purple-700;
+}
+
+.blur-bg {
+  @apply bg-black bg-opacity-50 backdrop-blur-lg;
+>>>>>>> 125a53c47bce7d712b5d54a55f33e34a8c3608b0
 }
