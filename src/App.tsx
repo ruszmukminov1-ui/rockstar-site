@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -13,59 +9,16 @@ import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
 import SupportModal from "./components/SupportModal";
 import OrderModal from "./components/OrderModal";
+import VideoReviews from "./components/VideoReviews";
 import FloatingElements from "./components/FloatingElements";
 import Dashboard from "./components/Dashboard";
-import KeyInputModal from "./components/KeyInputModal";
-import Terms from "./components/Terms"; // ✅ Новый импорт
+import Terms from "./components/Terms";
 
-import { useModal } from "./context/ModalContext";
-import { User } from "./types/User";
-import { storageUtils } from "./utils/storage";
+import { AppContextProvider, useApp } from "./context/AppContext";
 
-function App() {
-  const {
-    isAuthOpen,
-    closeAuthModal,
-    isSupportOpen,
-    closeSupportModal,
-    isOrderOpen,
-    closeOrderModal,
-    selectedProductForOrder,
-    openOrderModal,
-    currentUser,
-    setCurrentUser
-  } = useModal();
-
+function AppContent() {
+  const { currentUser, isAuthOpen, isSupportOpen, isOrderOpen } = useApp();
   const [showDashboard, setShowDashboard] = useState(false);
-  const [showKeyInput, setShowKeyInput] = useState(false);
-
-  useEffect(() => {
-    const existingUser = storageUtils.getCurrentUser();
-    if (existingUser) {
-      setCurrentUser(existingUser);
-    }
-  }, [setCurrentUser]);
-
-  const handleLogin = (user: User) => {
-    setCurrentUser(user);
-    closeAuthModal();
-  };
-
-  const handleLogout = () => {
-    storageUtils.clearCurrentUser();
-    setCurrentUser(null);
-    setShowDashboard(false);
-  };
-
-  const handleDashboardClick = () => {
-    if (currentUser) {
-      if (currentUser.purchasedProducts.length === 0) {
-        setShowKeyInput(true);
-      } else {
-        setShowDashboard(true);
-      }
-    }
-  };
 
   const scrollToShop = () => {
     const shopElement = document.getElementById('shop');
@@ -80,68 +33,51 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Главная страница */}
+        {/* Main page */}
         <Route path="/" element={
           showDashboard && currentUser ? (
             <div className="relative bg-black text-white font-rajdhani overflow-x-hidden">
-              <Header 
-                currentUser={currentUser}
-                onDashboardClick={handleDashboardClick}
-                onLogout={handleLogout}
-              />
+              <Header />
               <Dashboard user={currentUser} onBack={() => setShowDashboard(false)} />
               <FloatingElements />
-              {isSupportOpen && <SupportModal onClose={closeSupportModal} />}
             </div>
           ) : (
             <div className="relative bg-black text-white font-rajdhani overflow-x-hidden">
-              <Header 
-                currentUser={currentUser}
-                onDashboardClick={handleDashboardClick}
-                onLogout={handleLogout}
-              />
+              <Header />
               <Hero onBuyClick={scrollToShop} />
               <Features />
-              <Shop onBuyClick={openOrderModal} />
+              <Shop />
+              <VideoReviews />
               <Footer />
               <FloatingElements />
-
-              {isAuthOpen && <AuthModal onClose={closeAuthModal} onLogin={handleLogin} />}
-              {isSupportOpen && <SupportModal onClose={closeSupportModal} />}
-              {isOrderOpen && selectedProductForOrder && (
-                <OrderModal
-                  onClose={closeOrderModal} 
-                  selectedProduct={selectedProductForOrder} 
-                />
-              )}
-              {showKeyInput && (
-                <KeyInputModal 
-                  onClose={() => setShowKeyInput(false)}
-                  onSuccess={() => {
-                    setShowKeyInput(false);
-                    setShowDashboard(true);
-                  }}
-                />
-              )}
             </div>
           )
         } />
 
-        {/* Страница условий пользования */}
+        {/* Terms page */}
         <Route path="/terms" element={
           <div className="animate-fade-in bg-black min-h-screen text-white font-rajdhani">
-            <Header
-              currentUser={currentUser}
-              onDashboardClick={handleDashboardClick}
-              onLogout={handleLogout}
-            />
+            <Header />
             <Terms />
             <Footer />
             <FloatingElements />
           </div>
         } />
       </Routes>
+
+      {/* Modals */}
+      {isAuthOpen && <AuthModal />}
+      {isSupportOpen && <SupportModal />}
+      {isOrderOpen && <OrderModal />}
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <AppContextProvider>
+      <AppContent />
+    </AppContextProvider>
   );
 }
 
